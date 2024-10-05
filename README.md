@@ -1,78 +1,114 @@
-### **Task Overview**
 
-The objective of this task is to develop two services: **Caller Service** and **Wallet Service**, using the provided JSON data. The project must include database schema creation, API endpoints, inter-service communication through **RabbitMQ**, environment configuration, and basic logging and error-handling mechanisms. The candidate should also provide explanations for any scalability considerations used in the project.
+## **Task Overview**
 
-### **Project Requirements**
+This task involves building two Nest.js services: 
+1. **Wallet Service**: Ingests data from a JSON file, stores it in a database using Sequelize, and provides endpoints for wallet analysis.
+2. **Caller Service**: Simulates high-load conditions by making frequent requests to the Wallet Service.
+3. Use best practices for setting up services, creating APIs, and handling high-load scenarios.
 
-#### **1. Database Setup**
-- **Schema**: Use **Sequelize** to create a database schema that models the data from the provided JSON file.
-- The schema should capture key characteristics of each wallet, including but not limited to:
-  - Wallet ID
-  - Total profit
-  - Number of tokens traded
-  - Number of active days
-  - Minimum and maximum profit/loss
-- The database should allow storing and retrieving analyzed data for the wallet service.
-  
-#### **2. Wallet Service**
-- Create a service that provides analysis and information about wallets, with the following endpoints:
-  - **GET /wallets**: Fetch a list of wallets with sorting options such as:
-    - Total profit
-    - Number of tokens traded
-    - Number of active days
-    - Maximum profit
-    - Minimum profit
-    - Number of transactions
-  - **GET /wallets/:id**: Fetch detailed information about a specific wallet.
-- Use **Sequelize** to handle database interactions.
-- Implement **basic logging** to monitor incoming requests and errors.
-- **Environment Configuration**: Use environment variables for configuration (e.g., database credentials, RabbitMQ settings).
-- Implement **simple error handling** to handle database and service-related issues.
+### **Requirements**
+- Use **Nest.js** and **Sequelize**.
+- Plan a database schema. 
+- Employ **RabbitMQ** for inter-service communication.
+- Include basic **logging** (e.g., with Winston) and **error handling**.
+- Set Up **Swagger** For API documentation.
+- Utilize **environment configuration** (.env files).
+- **Bonus**: Dockerize the application.
+- if you have Implemented a **scalablity** solution make sure you briefly explain it in the README file.
 
-#### **3. Caller Service**
-- This service randomly calls the wallet service endpoints, simulating external usage.
-- Use **RabbitMQ** for inter-service communication:
-  - Set up RabbitMQ to queue requests from the caller service to the wallet service.
-  - Use asynchronous messaging to improve system reliability and allow the wallet service to handle multiple requests efficiently.
-- **Implementation Details**:
-  - Configure **message acknowledgments** to ensure messages are processed successfully.
-  - Use **persistent messages** in RabbitMQ to maintain message integrity.
-  - Implement basic **retry mechanisms** to handle failed messages and ensure reliability.
+---
 
-#### **4. Scalability**
-- Implement solutions to ensure the services are scalable. Document the scalability solutions used in the `README.md`, explaining how the system can handle high loads. Considerations may include:
-  - Using RabbitMQ for asynchronous processing to avoid overloading the wallet service with synchronous requests.
-  - Using **environment-based configurations** to easily adjust settings for different environments (development, production).
-  - **Database indexing** to improve query performance for sorting and filtering.
-- (Optional) Introduce a **caching mechanism** (e.g., using Redis) to store frequently accessed wallet data, reducing database load and improving response times.
+## **Section 1: Wallet Service**
 
-#### **5. Environment Configuration**
-- All settings (RabbitMQ host, port, credentials, database credentials) must be configured using environment variables.
-- Provide a `.env.example` file for reference, listing all the environment variables required for the project.
+### **Step 1: Database Schema**
 
-#### **6. Logging and Error Handling**
-- Use simple logging (e.g., **console logging**, **Winston**, or **Pino**) to log API requests, responses, and errors.
-- Implement centralized error handling in both services to catch and log errors gracefully.
+- Use **Sequelize** with PostgreSQL to create a `wallets` table. The schema should include the following columns but leaves room for creativity:
+  - **`address`**: (Primary Key) - The wallet's address, used for searching and identification.
+  - **`total_profit`**: The total profit/loss of the wallet.
+  - **Other columns**: You may include columns like `total_profit`, `num_tokens_traded`, `num_active_days`, `avg_trade_volume`, `risk_assessment`, `last_updated` and others as needed for your analysis.
 
-### **Optional Bonus: Dockerization**
-- **Docker**: Containerize both the **Caller Service** and **Wallet Service** using Docker.
-- Use a `docker-compose` file to set up a multi-container application, including:
-  - **Wallet Service**
-  - **Caller Service**
-  - **RabbitMQ**
-  - Any additional services (e.g., **Database**, **Redis**)
 
-### **Submission Instructions**
-- Upload your solution to a GitHub repository.
-- Include a `README.md` file with:
-  - Clear instructions for setting up and running the project.
-  - An explanation of the database schema and any endpoints created.
-  - A detailed description of the scalability solutions implemented.
-  - Instructions for setting up environment configurations using the `.env.example` file.
-  - (Optional) Details of the Docker setup, if implemented. 
+### **Step 2: Data Ingestion**
+- Implement a method to **parse the JSON file** and populate the `wallets` table. Use streaming or batching techniques for efficient processing of large files.
 
-### **Additional Notes**
-- Use **RabbitMQ** for inter-service communication, focusing on asynchronous processing to enhance scalability.
-- Use **Sequelize** as the ORM for database interactions.
-- Implement basic logging and error handling throughout the project.
-- The project should be structured and coded to a production-level quality, using best practices in service communication, error handling, and performance optimization.
+### **Step 3: Endpoints**
+Implement the following, simpler set of endpoints:
+
+1. **`GET /wallets`**:
+   - **Description**: Fetch a list of wallets with optional sorting.
+   - **Query Parameters**:
+     - `sort_by`: Can be `total_profit`, `num_tokens_traded`, or `num_active_days`.
+     - `order`: `asc` or `desc`.
+   - **Example**: `/wallets?sort_by=total_profit&order=desc`.
+
+2. **`GET /wallets/:address`**:
+   - **Description**: Fetch detailed information for a specific wallet using its address.
+   - **Response**: Returns the characteristics of the specified wallet.
+
+3. **`POST /wallets/analyze`**:
+   - **Description**: Analyzes the JSON data to update the wallet information in the database.
+   - **Body Parameters**: None. The service automatically processes the JSON file.
+   - **Response**: Returns a status message indicating the success of the analysis.
+
+4. **`GET /wallets/summary`**:
+   - **Description**: Retrieve basic statistics about the wallets (e.g., average profit, count of wallets analyzed).
+   - **Response**: Returns a summary with key statistics.
+
+
+### **Step 4: Data Analysis**
+- In the `POST /wallets/analyze` endpoint, implement logic to:
+  - Calculate total profit/loss, identify most/least profitable tokens.
+  - Determine the number of unique tokens traded and active trading days.
+  - Assess risk levels based on diversification.
+- Save results to the database.
+
+### **Step 5: Integration with RabbitMQ**
+- Implement RabbitMQ to queue and process requests from the Caller Service.
+- Optimize RabbitMQ settings for high throughput (e.g., persistent messages, acknowledgment, retries).
+
+---
+
+## **Section 2: Caller Service**
+
+### **Objective**
+Simulate high-load conditions by making randomized requests to the Wallet Service via RabbitMQ.
+
+### **Step 1: Implementation**
+- Set up the `CallerService` to:
+  - Use a cron job or interval to **send 50 random requests per minute** to the Wallet Service.
+  - Randomly choose between the Wallet Service endpoints (`/wallets`, `/wallets/:id`, `/wallets/top-tokens/:id`).
+  - Utilize RabbitMQ for sending requests, allowing for asynchronous processing.
+  - Log the the latency of each response.
+
+### **Step 2: Logging and Error Handling**
+- Implement logging using **Winston** to capture the status of each request (success/failure, latency).
+- Handle errors using retry logic for failed requests and manage timeouts gracefully.
+
+---
+
+## **Optional Bonus Tasks**
+
+- **Scalability Discussion**: Include a section in this `README.md` on how you would scale this system to handle higher traffic or larger data volumes.
+- **Environment Configuration**: Store all configurations in `.env` files. Include a sample `.env.example` file.
+- **Scalability**: Document in the `README.md` how you would scale the service (e.g., using caching, database indexing, and optimizing RabbitMQ settings).
+- **Bonus**: 
+1. **Docker**: Implement Docker to containerize both services for easier deployment.
+2. **Caching**: Implement caching for wallet data to minimize database reads and improve response times.
+
+---
+
+
+## **Submission Guidelines**
+1. Implement the solution as a node.js (preferedly Nest.js) application with the above services and endpoints.
+2. Structure your project with clear separation between services (`CallerService` and `WalletService`).
+3. Include a `README.md` with instructions for setting up, running, and testing the application.
+4. Compress the project folder (excluding large data files) and email it, or send to the telegram ID that contacted you, or provide a downloadable link for the entire project.
+
+---
+
+By completing this task, you will demonstrate your ability to:
+- Design and implement efficient data processing for large JSON files.
+- Create a robust database schema for storing and querying analytical data.
+- Develop scalable and reliable API endpoints in a Nest.js application.
+- Handle high-frequency API requests with proper concurrency and error-handling techniques.
+
