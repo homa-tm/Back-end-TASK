@@ -100,13 +100,27 @@ Simulate high-load conditions by making randomized requests to the Wallet Servic
 ---
 
 
-## **Submission Guidelines**
-1. Implement the solution as a node.js (preferedly Nest.js) application with the above services and endpoints.
-2. Structure your project with clear separation between services (`CallerService` and `WalletService`).
-3. Include a `README.md` with instructions for setting up, running, and testing the application.
-4. Compress the project folder (excluding large data files) and email it, or send to the telegram ID that contacted you, or provide a downloadable link for the entire project.
+Here's the revised version with a shorter implementation and project structure section, and with the submission details moved up:
 
 ---
+
+## **Submission Guidelines**
+
+1. **Submission**:
+   - Create a **GitHub repository** named with your full name. Commit all source code, configuration files, and documentation.
+   - Share the GitHub repository link and Swagger documentation link with us via **both**:
+     - Email: gh***.***a@gmail.com
+     - The Telegram ID provided to you.
+
+2. **Implementation & Project Structure**:
+   - Use Node.js (preferably Nest.js) with Sequelize and RabbitMQ for the services (`CallerService` and `WalletService`).
+   - Ensure a clear separation between services, including basic logging, error handling, environment configuration, and scalability considerations.
+
+3. **Documentation**:
+   - Add a `README.md` with setup instructions, usage, testing steps, and a brief overview of scalability solutions.
+   - Use **Swagger** for API documentation. Include the link to access the Swagger UI in the `README.md`.
+
+--- 
 
 By completing this task, you will demonstrate your ability to:
 - Design and implement efficient data processing for large JSON files.
