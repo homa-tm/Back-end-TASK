@@ -86,13 +86,13 @@ Simulate high-load conditions by making randomized requests to the Wallet Servic
 
 ---
 
-## **Additiona Tasks**
+## **Additional Points**
 
 - **Scalability Discussion**: Include a section in this `README.md` on how you would scale this system to handle higher traffic or larger data volumes.
 - **Environment Configuration**: Store all configurations in `.env` files. Include a sample `.env.example` file.
 - **Scalability**: Document in the `README.md` how you would scale the service (e.g., using caching, database indexing, and optimizing RabbitMQ settings).
 
-## **Additiona Tasks**
+## **Bonus Tasks**
 
 1. **Docker**: Implement Docker to containerize both services for easier deployment.
 2. **Caching**: Implement caching for wallet data to minimize database reads and improve response times.
