@@ -6,6 +6,25 @@ This task involves building two Nest.js services:
 2. **Caller Service**: Simulates high-load conditions by making frequent requests to the Wallet Service.
 3. Use best practices for setting up services, creating APIs, and handling high-load scenarios.
 
+
+## **Submission Guidelines**
+
+1. **Submission**:
+   - Create a **GitHub repository** named with your full name. Commit all source code, configuration files, and documentation.
+   - Share the GitHub repository link and Swagger documentation link with us via **both**:
+     - Email: gh***.***a@gmail.com
+     - The Telegram ID provided to you.
+
+2. **Implementation & Project Structure**:
+   - Use Node.js (preferably Nest.js) with Sequelize and RabbitMQ for the services (`CallerService` and `WalletService`).
+   - Ensure a clear separation between services, including basic logging, error handling, environment configuration, and scalability considerations.
+
+3. **Documentation**:
+   - Add a `README.md` with setup instructions, usage, testing steps, and a brief overview of scalability solutions.
+   - Use **Swagger** for API documentation. Include the link to access the Swagger UI in the `README.md`.
+
+--- 
+
 ### **Requirements**
 - Use **Nest.js** and **Sequelize**.
 - Plan a database schema. 
@@ -97,30 +116,8 @@ Simulate high-load conditions by making randomized requests to the Wallet Servic
 1. **Docker**: Implement Docker to containerize both services for easier deployment.
 2. **Caching**: Implement caching for wallet data to minimize database reads and improve response times.
 
----
-
-
-Here's the revised version with a shorter implementation and project structure section, and with the submission details moved up:
 
 ---
-
-## **Submission Guidelines**
-
-1. **Submission**:
-   - Create a **GitHub repository** named with your full name. Commit all source code, configuration files, and documentation.
-   - Share the GitHub repository link and Swagger documentation link with us via **both**:
-     - Email: gh***.***a@gmail.com
-     - The Telegram ID provided to you.
-
-2. **Implementation & Project Structure**:
-   - Use Node.js (preferably Nest.js) with Sequelize and RabbitMQ for the services (`CallerService` and `WalletService`).
-   - Ensure a clear separation between services, including basic logging, error handling, environment configuration, and scalability considerations.
-
-3. **Documentation**:
-   - Add a `README.md` with setup instructions, usage, testing steps, and a brief overview of scalability solutions.
-   - Use **Swagger** for API documentation. Include the link to access the Swagger UI in the `README.md`.
-
---- 
 
 By completing this task, you will demonstrate your ability to:
 - Design and implement efficient data processing for large JSON files.
